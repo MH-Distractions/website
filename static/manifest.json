@@ -1,0 +1,20 @@
+{
+  "background_color": "#dfffff",
+  "theme_color": "#84ffff",
+  "name": "MH Distractions",
+  "short_name": "MH Distractions",
+  "display": "minimal-ui",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "logos/mh-distractions-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logos/mh-distractions-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

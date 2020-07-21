@@ -13,11 +13,20 @@
     try {
       let response = await query(
         fetch,
-        `mutation login($email: String, $password: String) { login(email: $email, password: $password) { token } }`,
+        `
+        mutation login($email: String, $password: String) {
+          login(email: $email, password: $password) {
+            token
+            user {
+              role
+            }
+          }
+        }
+        `,
         { email, password }
       );
 
-      user.set(response.login.token);
+      user.set(response.login);
       await goto("/");
     } catch (e) {
       error = e.message;

@@ -160,6 +160,11 @@
         </li>
       {/each}
       {#if $user}
+        {#if $user.user.role === 'admin'}
+          <li>
+            <a href="/admin">admin</a>
+          </li>
+        {/if}
         <li>
           <a href="/" on:click|preventDefault={() => user.set(null)}>logout</a>
         </li>

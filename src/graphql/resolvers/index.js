@@ -13,5 +13,7 @@ export default {
   Mutation: {
     login: account.login,
     register: account.register,
+    updateArticle: news.update,
+    createArticle: news.create,
   },
 };

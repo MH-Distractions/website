@@ -11,7 +11,6 @@
           points
         }
         news (limit: 1) {
-          id
           title
           published
           content

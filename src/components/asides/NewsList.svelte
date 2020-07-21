@@ -29,7 +29,7 @@
 </style>
 
 <ul>
-  {#each list as article (article.id)}
+  {#each list as article (article._id)}
     <li>
       <a href="news/{article.slug}">{article.title}</a>
       <time datetime={article.published}>

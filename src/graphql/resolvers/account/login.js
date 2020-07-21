@@ -8,9 +8,12 @@ export default async (_, args, ctx) => {
     throw new AuthenticationError("Invalid e-mail address or password");
   }
 
+  const role = user.admin ? "admin" : "user";
+
   const token = jwt.sign(
     {
       sub: user._id,
+      role,
     },
     process.env.JWT_KEY,
     {
@@ -19,5 +22,5 @@ export default async (_, args, ctx) => {
     }
   );
 
-  return { token };
+  return { token, user: { id: user._id, role } };
 };

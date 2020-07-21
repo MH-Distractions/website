@@ -4,11 +4,18 @@ type Team {
 }
 
 type News {
-    id: ID
-    title: String
+    _id: ID!
+    title: String!
     published: String
     content: String
     slug: String
+    status: String!
+}
+input Article {
+    title: String!
+    content: String!
+    slug: String!
+    status: String!
 }
 
 type DiscordUser {
@@ -22,16 +29,24 @@ type DiscordUser {
 
 type Query {
     teams: [Team]
-    news(limit: Int): [News]
+    news(limit: Int, publishedOnly: Boolean = true): [News]
     article(slug: String): News
     discord: [DiscordUser]
 }
 
+type User {
+    id: ID
+    role: String
+}
+
 type LoginToken {
     token: String
+    user: User
 }
 
 type Mutation {
     login(email: String, password: String): LoginToken
     register(email: String, password: String, name: String): LoginToken
+    updateArticle(id: ID, article: Article): News
+    createArticle(article: Article): News
 }

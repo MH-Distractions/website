@@ -9,11 +9,13 @@ export default async (fetch, query, variables = null) => {
   }
 
   let token;
-  user.subscribe((val) => (token = val));
+  user.subscribe((val) => {
+    val && val.token ? (token = val.token) : (token = "");
+  });
 
   const response = await fetch("graphql", {
     method: "post",
-    headers: { "content-type": "application/json", authorization: token || "" },
+    headers: { "content-type": "application/json", authorization: token },
     body: JSON.stringify(body),
   });
   const json = await response.json();

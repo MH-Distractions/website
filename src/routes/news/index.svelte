@@ -7,13 +7,12 @@
       `
       query news {
         latest: news(limit: 1) {
-          id
           title
           published
           content
         }
         list: news {
-          id
+          _id
           title
           published
           slug

@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer, AuthenticationError, gql } from "apollo-server-express";
 import fs from "fs";
 import path from "path";
 import { MongoClient, ObjectId } from "mongodb";
@@ -27,7 +27,6 @@ export async function gqlServer() {
 
       let context = { db: dbClient };
 
-      console.log(headers.authorization);
       if (headers.authorization) {
         try {
           const tokenInfo = jwt.verify(
@@ -39,6 +38,7 @@ export async function gqlServer() {
             .findOne({ _id: ObjectId(tokenInfo.sub) });
         } catch (e) {
           console.log(e.message);
+          throw new AuthenticationError("Invalid token provided");
         }
       }
       return context;

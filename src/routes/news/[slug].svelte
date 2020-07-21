@@ -6,7 +6,7 @@
       this.fetch,
       `query news { article (slug: "${params.slug}") {title published content}
         list: news {
-          id
+          _id
           title
           published
           slug

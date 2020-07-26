@@ -6,7 +6,7 @@ const templates = { register };
 
 const transporter = mailer.createTransport({
   host: process.env.SMTP_HOSTNAME,
-  port: 587,
+  port: process.env.SMTP_PORT,
   auth: {
     user: process.env.SMTP_USERNAME,
     pass: process.env.SMTP_PASSWORD,

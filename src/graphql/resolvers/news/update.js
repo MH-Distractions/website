@@ -3,7 +3,7 @@ import { ObjectID } from "mongodb";
 
 export default async (_, args, ctx) => {
   // Only admins can do this
-  if (!ctx.user.admin) {
+  if (!ctx.user.user.admin) {
     throw new AuthenticationError(
       "You do not have permission to access this functionality"
     );

@@ -1,96 +1,21 @@
 <script>
-  import { goto } from "@sapper/app";
+  import { onMount } from "svelte";
   import query from "../graphql/query";
   import { user } from "../stores/user";
 
-  let email;
-  let password;
+  // Todo: Change this back to an import when there are TS bindings for @sapper/app
+  const goto = require("@sapper/app").goto;
 
-  let error;
+  onMount(async () => {
+    const response = await query(
+      fetch,
+      `mutation login($code: String) { login(code: $code) { token } }`,
+      { code: new URLSearchParams(window.location.search).get("code") }
+    );
 
-  async function handleSubmit() {
-    error = null;
-    try {
-      let response = await query(
-        fetch,
-        `
-        mutation login($email: String, $password: String) {
-          login(email: $email, password: $password) {
-            token
-            user {
-              role
-            }
-          }
-        }
-        `,
-        { email, password }
-      );
-
-      user.set(response.login);
-      await goto("/");
-    } catch (e) {
-      error = e.message;
-    }
-  }
+    user.set(response.login);
+    await goto("/");
+  });
 </script>
 
-<style>
-  form {
-    box-sizing: border-box;
-  }
-  label {
-    display: block;
-  }
-
-  input {
-    display: block;
-    padding: 10px 15px;
-    border: 1px solid #333;
-    border-radius: 5px;
-    width: 100%;
-  }
-
-  button {
-    display: block;
-    border-radius: 5px;
-    border: 1px solid #333;
-    margin: 10px auto;
-    padding: 10px 15px;
-  }
-
-  .error-message {
-    background-color: #ffdfdf;
-    border: 1px solid #ff8484;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-  }
-</style>
-
-<div class="main">
-  <form method="post" on:submit|preventDefault={handleSubmit}>
-    <label for="email">E-mail Address</label>
-    <input
-      type="email"
-      name="email"
-      id="email"
-      required
-      bind:value={email}
-      autocomplete="email" />
-
-    <label for="password">Password</label>
-    <input
-      bind:value={password}
-      type="password"
-      name="password"
-      id="password"
-      required
-      autocomplete="current-password" />
-
-    <button type="submit">Log In</button>
-  </form>
-
-  {#if error}
-    <div class="error-message">{error}</div>
-  {/if}
-</div>
+LOGIN

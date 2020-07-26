@@ -1,12 +1,21 @@
 <script>
+  import query from "../graphql/query";
   import { user } from "../stores/user";
+  import { goto } from "@sapper/app";
   export let segment;
 
   let pages = [
     { href: [undefined], name: "home" },
     { href: ["activities"], name: "activities" },
-    { href: ["news"], name: "news" },
+    { href: ["news"], name: "news" }
   ];
+
+  async function logout() {
+    await query(fetch, `mutation { logout }`);
+
+    user.set(null);
+    await goto("/");
+  }
 </script>
 
 <style>
@@ -160,27 +169,20 @@
         </li>
       {/each}
       {#if $user}
-        {#if $user.user.role === 'admin'}
+        {#if $user.user.admin}
           <li>
             <a href="/admin">admin</a>
           </li>
         {/if}
         <li>
-          <a href="/" on:click|preventDefault={() => user.set(null)}>logout</a>
+          <a href="/" on:click|preventDefault={logout}>logout</a>
         </li>
       {:else}
         <li>
           <a
             aria-current={segment === 'login' ? 'page' : undefined}
-            href="login">
+            href="https://discord.com/api/oauth2/authorize?client_id=734010763408310332&amp;redirect_uri=http%3A%2F%2F172.25.186.233%3A3000%2Flogin&amp;response_type=code&amp;scope=guilds.join%20identify%20email">
             login
-          </a>
-        </li>
-        <li>
-          <a
-            aria-current={segment === 'register' ? 'page' : undefined}
-            href="register">
-            register
           </a>
         </li>
       {/if}

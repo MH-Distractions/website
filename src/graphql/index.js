@@ -1,10 +1,11 @@
 import { ApolloServer, AuthenticationError, gql } from "apollo-server-express";
 import fs from "fs";
 import path from "path";
-import { MongoClient, ObjectId } from "mongodb";
-import jwt from "jsonwebtoken";
+import { MongoClient } from "mongodb";
 
 import resolvers from "./resolvers";
+import { CacheClient } from "./CacheClient";
+import Axios from "axios";
 
 const typeDefs = gql`
   ${fs.readFileSync(path.resolve(__dirname, "../../../schema.graphql"))}
@@ -12,7 +13,7 @@ const typeDefs = gql`
 
 export async function gqlServer() {
   const db = new MongoClient(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost`,
+    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}`,
     {
       useUnifiedTopology: true,
     }
@@ -22,22 +23,18 @@ export async function gqlServer() {
     typeDefs,
     resolvers,
     context: async (ctx) => {
-      const dbClient = client.db("test");
+      const dbClient = client.db(process.env.DB_NAME);
       const { headers } = ctx.req;
 
-      let context = { db: dbClient };
+      let context = { db: dbClient, cache: new CacheClient() };
 
       if (headers.authorization) {
         try {
-          const tokenInfo = jwt.verify(
-            headers.authorization,
-            process.env.JWT_KEY
+          context.user = JSON.parse(
+            await context.cache.get(headers.authorization)
           );
-          context.user = await dbClient
-            .collection("user")
-            .findOne({ _id: ObjectId(tokenInfo.sub) });
         } catch (e) {
-          console.log(e.message);
+          console.log(e);
           throw new AuthenticationError("Invalid token provided");
         }
       }

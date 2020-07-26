@@ -1,52 +1,56 @@
 type Team {
-    name: String
-    points: Int
+  name: String
+  points: Int
 }
 
 type News {
-    _id: ID!
-    title: String!
-    published: String
-    content: String
-    slug: String
-    status: String!
+  _id: ID!
+  title: String!
+  published: String
+  content: String
+  slug: String
+  status: String!
 }
 input Article {
-    title: String!
-    content: String!
-    slug: String!
-    status: String!
+  title: String!
+  content: String!
+  slug: String!
+  status: String!
 }
 
 type DiscordUser {
-    id: ID
-    name: String
-    playing: String
-    status: String
-    avatar_url: String
-    avatar_url_jpg: String
+  id: ID
+  name: String
+  playing: String
+  status: String
+  avatar_url: String
+  avatar_url_jpg: String
 }
 
 type Query {
-    teams: [Team]
-    news(limit: Int, publishedOnly: Boolean = true): [News]
-    article(slug: String): News
-    discord: [DiscordUser]
+  teams: [Team]
+  news(limit: Int, publishedOnly: Boolean = true): [News]
+  article(slug: String): News
+  discord: [DiscordUser]
 }
 
 type User {
-    id: ID
-    role: String
+  _id: ID!
+  admin: Boolean!
+  discord_id: String!
+  email: String!
+  username: String!
+  discriminator: String
 }
 
 type LoginToken {
-    token: String
-    user: User
+  token: String
+  user: User
 }
 
 type Mutation {
-    login(email: String, password: String): LoginToken
-    register(email: String, password: String, name: String): LoginToken
-    updateArticle(id: ID, article: Article): News
-    createArticle(article: Article): News
+  login(code: String): LoginToken
+  logout: Boolean
+  updateArticle(id: ID, article: Article): News
+  createArticle(article: Article): News
 }

@@ -6,7 +6,7 @@ const client = new Discord.Client();
 
 async function updateLocalCache() {
   const db = new MongoClient(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@localhost`,
+    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}`,
     {
       useUnifiedTopology: true,
     }
@@ -15,7 +15,7 @@ async function updateLocalCache() {
 
   const client = new discord.Client();
   await client.login(process.env.DISCORD_TOKEN);
-  const guild = await client.guilds.cache.get("665655279433809921");
+  const guild = await client.guilds.cache.get(process.env.DISCORD_GUILD);
   const members = await guild.members
     .fetch({
       withPresences: true,
@@ -31,7 +31,7 @@ async function updateLocalCache() {
     const u = await client.users.fetch(m.id);
 
     await dbClient
-      .db("test")
+      .db(process.env.DB_NAME)
       .collection("discord")
       .updateOne(
         { id: m.id },
@@ -56,6 +56,7 @@ client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   setInterval(async () => await updateLocalCache(), 60000);
+  await updateLocalCache();
 });
 
 client.on("message", (msg) => {

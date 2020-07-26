@@ -1,7 +1,7 @@
 <script context="module">
   import query from "../graphql/query";
 
-  export async function preload(page, session) {
+  export async function preload() {
     return await query(
       this.fetch,
       `

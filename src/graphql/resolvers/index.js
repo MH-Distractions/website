@@ -12,7 +12,7 @@ export default {
   },
   Mutation: {
     login: account.login,
-    register: account.register,
+    logout: account.logout,
     updateArticle: news.update,
     createArticle: news.create,
   },

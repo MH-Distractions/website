@@ -18,7 +18,9 @@
 </style>
 
 <h2>Latest News</h2>
+{#if news.length > 0}
 <time datetime={news[0].published}>{moment(news[0].published).fromNow()}</time>
 <h3>{news[0].title}</h3>
 {@html marked(news[0].content ? news[0].content.substr(0, 200) : '')}
 <a href="news/{news[0].slug}">Read More &gt;</a>
+{/if}
